@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install mkdocs-material
-      - run: mkdocs build -d site/azure-private-links          
+      - run: mkdocs build -d site/azure-private-links
       - name: Create index file
         run: |
           echo "<meta http-equiv=\"refresh\" content=\"0; url=https://www.meetup.com/infrastructure-as-code-user-group-oslo/\" />" > site/index.html

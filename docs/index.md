@@ -1,18 +1,19 @@
-# Welcome to MkDocs
+# Working with Azure Private Links
 
-For full documentation visit [mkdocs.org](https://www.mkdocs.org).
+![logo](assets/images/logo.png)
 
-## Commands
+This is level 200 workshop that covers different aspects of working with [Azure Private Links](https://learn.microsoft.com/en-us/azure/private-link/private-link-overview) where you will learn:
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+- What is Azure Private Link
+- What is Azure Private Endpoint
+- How Azure Private Link, Azure Private Endpoint, and Azure Private Link service work together to create private connections to Azure resources
+- When to use Azure Private Link
+- How to configure DNS settings for private endpoints
 
-## Project layout
+and many more.
 
-    mkdocs.yml    # The configuration file.
-    docs/
-        index.md  # The documentation homepage.
-        ...       # Other markdown pages, images and other files.
+## Agenda
 
+- Welcome + practical information
+- Azure Azure Private Link overview (Slides)
+- [Lab-01](labs/lab-01/index.md) - provisioning of lab resources

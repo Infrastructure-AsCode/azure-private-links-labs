@@ -5,7 +5,7 @@ site_author: Infrastructure as Code Oslo
 nav:
   - Homepage: index.md
   - Prerequisites: prerequisites.md
-  - Lab 01 - Provision lab environment: labs/lab-01/index.md
+  - Lab 01 - Provision lab resources: labs/lab-01/index.md
 
 theme:
   name: material
@@ -63,7 +63,7 @@ markdown_extensions:
   - attr_list
   - md_in_html
   - toc:
-      toc_depth: 1
+      toc_depth: 4
       permalink: true
 
 copyright: Copyright &copy; 2023 Infrastructure as Code Oslo

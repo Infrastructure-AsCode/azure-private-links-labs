@@ -20,7 +20,7 @@ winget install -e --id Microsoft.VisualStudioCode
 
 Install Bicep plugin from [marketplace](https://marketplace.visualstudio.com/items?itemName=ms-azuretools.vscode-bicep) 
 
-## Windows Terminal
+## Windows Terminal (if you are using Windows)
 
 Download and install [Windows Terminal](https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701?activetab=pivot:overviewtab&atc=true) or install it with `winget` (Windows only)
 
@@ -51,7 +51,7 @@ az upgrade
 
 Open your terminal (bash, cmd or powershell) and login to your azure account by running this command
 
-```bash
+```powershell
 # Login using your Azure account
 az login
 
@@ -67,29 +67,10 @@ az account set --subscription subscription_name
 
 ## Install git
 
-```bash
+```powershell
 # Install git for Mac
 brew install git
 
-# Install git with choco
-choco install git
-
 # Install git with winget
-winget install Git.Git
-```
-
-## Register `Microsoft.Web` resource provider
-
-```powershell
-az provider register --namespace Microsoft.Web
-```
-
-## Docker Desktop
-
-Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop)
-
-or install it with `winget` (Windows only)
-
-```powershell
-winget install -e --id Docker.DockerDesktop
+winget install -e --id Git.Git
 ```
