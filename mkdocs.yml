@@ -1,0 +1,90 @@
+site_name: Working with Azure Private Endpoints - Workshop
+site_description: Working with Azure Private Endpoints - Workshop
+site_author: Infrastructure as Code Oslo
+
+nav:
+  - Homepage: index.md
+  - Prerequisites: prerequisites.md
+  - Lab 01 - Provision lab environment: labs/lab-01/index.md
+
+theme:
+  name: material
+  font:
+    text: Ubuntu
+  palette:
+    - scheme: default
+      primary: indigo
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: teal
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+  features:
+    - header.autohide
+    - navigation.instant
+    - navigation.indexes
+    - navigation.top
+    - navigation.footer
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+  icon:
+    repo: fontawesome/brands/github
+  logo: assets/images/02579-icon-service-Private-Endpoints.svg
+  favicon: assets/images/02579-icon-service-Private-Endpoints.svg
+
+markdown_extensions:
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - admonition
+  - pymdownx.keys
+  - pymdownx.inlinehilite
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.snippets:
+      check_paths: true
+      url_download: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - attr_list
+  - md_in_html
+  - toc:
+      toc_depth: 1
+      permalink: true
+
+copyright: Copyright &copy; 2023 Infrastructure as Code Oslo
+
+plugins:
+  - search
+  - tags
+  
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Infrastructure-AsCode/azure-private-links-labs
+  consent:
+    title: Cookie consent
+    description: >- 
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+
+extra_css:
+  - assets/stylesheets/extra.css
+
+repo_url: https://github.com/Infrastructure-AsCode/azure-private-links-labs
