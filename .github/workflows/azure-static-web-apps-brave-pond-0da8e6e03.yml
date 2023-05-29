@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install mkdocs-material
-      - run: mkdocs build          
+      - run: mkdocs build site/azure-private-links          
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -36,6 +36,7 @@ jobs:
           app_location: "/site" # App source code path
           api_location: "" # Api source code path - optional
           skip_app_build: true # Skip build step of app if the project does not contain a build script
+          skip_api_build: true # Skip build step of api if the project does not contain a build script
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
