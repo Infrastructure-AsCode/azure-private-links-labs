@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: '3.11'
       - run: pip install mkdocs-material
-      - run: mkdocs build site/azure-private-links          
+      - run: mkdocs build -d site/azure-private-links          
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
