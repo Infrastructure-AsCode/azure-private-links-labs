@@ -1,5 +1,5 @@
-site_name: Working with Azure Private Endpoints - Workshop
-site_description: Working with Azure Private Endpoints - Workshop
+site_name: Working with Azure Private Links - Workshop
+site_description: Working with Azure Private Links - Workshop
 site_author: Infrastructure as Code Oslo
 
 nav:
@@ -34,8 +34,8 @@ theme:
     - content.tabs.link
   icon:
     repo: fontawesome/brands/github
-  logo: assets/images/02579-icon-service-Private-Endpoints.svg
-  favicon: assets/images/02579-icon-service-Private-Endpoints.svg
+  logo: assets/images/02209-icon-service-Private-Link-Services.svg
+  favicon: assets/images/02209-icon-service-Private-Link-Services.svg
 
 markdown_extensions:
   - pymdownx.emoji:
