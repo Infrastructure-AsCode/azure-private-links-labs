@@ -74,3 +74,14 @@ brew install git
 # Install git with winget
 winget install -e --id Git.Git
 ```
+
+## Install Azure Vpn client
+
+Download and install [Azure VPN Client](https://docs.microsoft.com/en-us/azure/vpn-gateway/openvpn-azure-ad-tenant?tabs=azure-ad-md-2-0&WT.mc_id=AZ-MVP-5003837)
+
+or install it with `winget` (Windows only)
+
+```powershell
+# Install Azure VPN Client with winget
+winget install "azure vpn client"
+```
