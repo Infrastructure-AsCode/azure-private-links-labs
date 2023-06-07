@@ -1,8 +1,15 @@
+@description('VPN Gateway Location')
 param location string
+@description('Resources Prefix based on Naming Convention')
 param prefix string
+@description('Gateway Subnet ID')
 param gatewaySubnetId string
-@secure()
-param tenantId string
+@description('Tenant ID')
+param tenantId string = tenant().tenantId
+@description('List of VPN Client Address Prefixes')
+param vpnClientSddressPrefixes array = [
+  '172.0.0.0/16'
+]
 
 var vpnGatewayName = '${prefix}-vgw'
 
@@ -52,9 +59,7 @@ resource virtualNetworkGateways 'Microsoft.Network/virtualNetworkGateways@2022-0
     activeActive: false
     vpnClientConfiguration: {
       vpnClientAddressPool: {
-        addressPrefixes: [
-          '172.0.0.0/16'
-        ]
+        addressPrefixes: vpnClientSddressPrefixes
       }
       vpnClientProtocols: [
         'OpenVPN'
@@ -67,7 +72,7 @@ resource virtualNetworkGateways 'Microsoft.Network/virtualNetworkGateways@2022-0
       vngClientConnectionConfigurations: []
       radiusServers: []
       vpnClientIpsecPolicies: []
-      aadTenant: 'https://login.microsoftonline.com/${tenantId}/'
+      aadTenant: '${environment().authentication.loginEndpoint}${tenantId}/'
       aadAudience: '41b23e61-6c1e-4545-b367-cd054e0ed4b4'
       aadIssuer: 'https://sts.windows.net/${tenantId}/'
     }

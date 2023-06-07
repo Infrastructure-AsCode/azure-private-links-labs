@@ -1,15 +1,15 @@
 param location string
-param prefix string
+param sqlServerName string
 param privateLinkSubnetId string
 param linkedVNetId string
 
+var pleName = '${sqlServerName}-ple'
 
-var cosmosdbName = '${prefix}-cosmosdb'
+resource sqlServer 'Microsoft.Sql/servers@2022-08-01-preview' existing = {
+  name: sqlServerName
+}
 
-var pleName = '${cosmosdbName}-ple'
-var groupName = 'sql' 
-
-var privateDnsZoneName = 'privatelink.documents.azure.com' 
+var privateDnsZoneName = 'privatelink${environment().suffixes.sqlServerHostname}' 
 
 resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
   name: privateDnsZoneName
@@ -28,34 +28,7 @@ resource privateDnsZoneVnetLink 'Microsoft.Network/privateDnsZones/virtualNetwor
   }  
 }
 
-
-resource cosmosdb 'Microsoft.DocumentDB/databaseAccounts@2022-11-15' = {
-  name: cosmosdbName
-  location: location
-  kind: 'GlobalDocumentDB'
-  
-  properties: {
-    consistencyPolicy: {
-      defaultConsistencyLevel: 'Session'
-    }
-    locations: [
-      {
-        locationName: location
-        failoverPriority: 0
-        isZoneRedundant: false
-      }
-    ]
-    capabilities: [
-      {
-        name: 'EnableServerless'
-      }
-    ]    
-    minimalTlsVersion: 'Tls12'
-    publicNetworkAccess: 'Disabled'
-    databaseAccountOfferType: 'Standard'
-  }
-}
-
+var groupName = 'sqlServer'
 resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-09-01' = {
   name: pleName
   location: location
@@ -67,7 +40,7 @@ resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-09-01' = {
           groupIds: [
             groupName
           ]
-          privateLinkServiceId: cosmosdb.id
+          privateLinkServiceId: sqlServer.id
         }
       }
     ]
@@ -91,6 +64,3 @@ resource privateEndpointDns 'Microsoft.Network/privateEndpoints/privateDnsZoneGr
     ]
   }
 }
-
-output key string = listKeys(cosmosdb.id, cosmosdb.apiVersion).primaryMasterKey
-output endpoint string = cosmosdb.properties.documentEndpoint

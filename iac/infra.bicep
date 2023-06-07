@@ -9,22 +9,13 @@ param vnetAddressPrefix string = '10.10'
 @description('Lab resources prefix.')
 param prefix string = 'iac-ws5'
 
-var tenantId = tenant().tenantId
+param administratorUserObjectId string = 'd10ec8a4-91c4-43e4-b26c-565b8c798b2c'
 
 var resourceGroupName = '${prefix}-rg'
 
 resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
   name: resourceGroupName
   location: location
-}
-
-module la 'modules/logAnalytics.bicep' = {
-  name: 'Deploy-LogAnalyticsWorkspace'
-  scope: rg
-  params: {
-    location: location
-    prefix: prefix
-  }
 }
 
 module vnet 'modules/vnet.bicep' = {
@@ -44,7 +35,6 @@ module vpnGateway 'modules/vpnGateway.bicep' = {
     gatewaySubnetId: '${vnet.outputs.id}/subnets/GatewaySubnet'
     location: location
     prefix: prefix
-    tenantId: tenantId
   }
 }
 
@@ -59,16 +49,15 @@ module dnsResolver 'modules/dnsResolver.bicep' = {
   }
 }
 
-module cosmosdb 'modules/cosmosdb.bicep' = {
+module keyvault 'modules/keyvault.bicep' = {
   scope: rg
-  name: 'Deploy-CosmosDB'
+  name: 'Deploy-KeyVault'
   params: {
     location: location
     prefix: prefix
-    linkedVNetId: vnet.outputs.id
-    privateLinkSubnetId: '${vnet.outputs.id}/subnets/plinks-snet'
   }
 }
+
 
 module sql 'modules/sql.bicep' = {
   scope: rg
@@ -76,8 +65,17 @@ module sql 'modules/sql.bicep' = {
   params: {
     location: location
     prefix: prefix
-    linkedVNetId: vnet.outputs.id
-    privateLinkSubnetId: '${vnet.outputs.id}/subnets/plinks-snet'
-    adminPassword: 'P@ssw0rd1234'
+    administratorUserObjectId: administratorUserObjectId
   }
 } 
+
+module sqlPrivateEndpoint 'modules/sqlPrivateEndpoint.bicep' = {
+  scope: rg
+  name: 'Deploy-SQLServer-PrivateEndpoint'
+  params: {
+    linkedVNetId: vnet.outputs.id
+    privateLinkSubnetId: '${vnet.outputs.id}/subnets/plinks-snet'
+    location: location
+    sqlServerName: sql.outputs.name
+  }
+}

@@ -18,6 +18,8 @@ Before we deploy lab resources, we need to register required resource providers.
 az provider register -n Microsoft.Network
 az provider register -n Microsoft.OperationalInsights
 az provider register -n Microsoft.Storage
+az provider register -n Microsoft.Sql
+az provider register -n Microsoft.DocumentDB
 ```
 
 ## Task #2 - Authorize the Azure VPN application
