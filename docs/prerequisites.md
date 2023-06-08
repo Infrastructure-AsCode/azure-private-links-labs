@@ -85,3 +85,12 @@ or install it with `winget` (Windows only)
 # Install Azure VPN Client with winget
 winget install "azure vpn client"
 ```
+
+## Install Azure Data Studio
+
+Download and install [Azure Data Studio](https://docs.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver15&WT.mc_id=AZ-MVP-5003837) or install it with `winget` (Windows only).
+
+```powershell
+# Install SQL Management Studio with winget
+winget install -e --id Microsoft.AzureDataStudio
+```

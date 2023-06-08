@@ -9,7 +9,16 @@ param vnetAddressPrefix string = '10.10'
 @description('Lab resources prefix.')
 param prefix string = 'iac-ws5'
 
-param administratorUserObjectId string = 'd10ec8a4-91c4-43e4-b26c-565b8c798b2c'
+param sqlAdminsGroupObjectId string
+param sqlAdminsGroupName string
+param signedInUserId string 
+
+@description('Test VM admin username. Default is iac-admin.')
+param testVMAdminUsername string = 'iac-admin'
+
+@description('Test VM admin user password')
+@secure()
+param testVMAdminPassword string
 
 var resourceGroupName = '${prefix}-rg'
 
@@ -55,9 +64,9 @@ module keyvault 'modules/keyvault.bicep' = {
   params: {
     location: location
     prefix: prefix
+    signedInUserId: signedInUserId
   }
 }
-
 
 module sql 'modules/sql.bicep' = {
   scope: rg
@@ -65,17 +74,19 @@ module sql 'modules/sql.bicep' = {
   params: {
     location: location
     prefix: prefix
-    administratorUserObjectId: administratorUserObjectId
+    sqlAdminsGroupObjectId: sqlAdminsGroupObjectId
+    sqlAdminsGroupName: sqlAdminsGroupName
   }
-} 
+}
 
-module sqlPrivateEndpoint 'modules/sqlPrivateEndpoint.bicep' = {
+module testVM 'modules/testVM.bicep' = {
   scope: rg
-  name: 'Deploy-SQLServer-PrivateEndpoint'
+  name: 'testVM'
   params: {
-    linkedVNetId: vnet.outputs.id
-    privateLinkSubnetId: '${vnet.outputs.id}/subnets/plinks-snet'
     location: location
-    sqlServerName: sql.outputs.name
+    vmName: 'testVM'
+    vmSubnetId: '${vnet.outputs.id}/subnets/testvm-snet'
+    adminUsername: testVMAdminUsername
+    adminPassword: testVMAdminPassword
   }
 }

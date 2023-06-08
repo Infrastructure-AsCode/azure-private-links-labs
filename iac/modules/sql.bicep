@@ -1,6 +1,7 @@
 param location string
 param prefix string
-param administratorUserObjectId string
+param sqlAdminsGroupObjectId string
+param sqlAdminsGroupName string
 param tenantId string = tenant().tenantId
 
 var sqlServerName = '${prefix}-sql'
@@ -16,9 +17,9 @@ resource sqlServer 'Microsoft.Sql/servers@2022-08-01-preview' = {
     administrators: {
       administratorType: 'ActiveDirectory'
       azureADOnlyAuthentication: true
-      sid: administratorUserObjectId
-      login: 'james.bond@iac-lab.com'
-      principalType: 'User'
+      sid: sqlAdminsGroupObjectId
+      login: sqlAdminsGroupName
+      principalType: 'Group'
       tenantId: tenantId
     }
   }
