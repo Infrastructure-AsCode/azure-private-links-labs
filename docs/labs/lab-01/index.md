@@ -48,3 +48,16 @@ cd iac
 
 !!! info "Estimated deployment time"
     35-40 minutes.
+
+## Task #4 - configure Azure VPN client
+
+First, check that Azure VPN client is installed on your machine. If not, download and install it from [here](https://www.microsoft.com/en-us/p/azure-vpn-client/9np355qt2sqb?activetab=pivot:overviewtab), or use `winget` (only for Windows users):
+
+```powershell
+winget install "azure vpn client"
+```
+
+Next, download VPN client configuration file from Azure portal. Go to your Virtual network gateway resource `iac-ws5-vgw` and download `VPN client configuration` file.
+
+![download-vpn-config](../../assets/images/lab-01/download-vpn-config.png)
+
