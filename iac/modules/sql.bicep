@@ -2,6 +2,7 @@ param location string
 param prefix string
 param sqlAdminsGroupObjectId string
 param sqlAdminsGroupName string
+param homeIP string
 param tenantId string = tenant().tenantId
 
 var sqlServerName = '${prefix}-sql'
@@ -26,7 +27,7 @@ resource sqlServer 'Microsoft.Sql/servers@2022-08-01-preview' = {
 }
 
 var databaseName = '${prefix}-sqldb' 
-resource sqlDatabase 'Microsoft.Sql/servers/databases@2021-08-01-preview' = {
+resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-08-01-preview' = {
   name: databaseName
   parent: sqlServer 
   location: location
@@ -43,6 +44,15 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2021-08-01-preview' = {
     autoPauseDelay: 0
     requestedBackupStorageRedundancy: 'Local'
     isLedgerOn: false
+  }
+}
+
+resource firewallForHomeIP 'Microsoft.Sql/servers/firewallRules@2022-08-01-preview' = {
+  name: 'home'
+  parent: sqlServer
+  properties: {
+    startIpAddress: homeIP
+    endIpAddress: homeIP
   }
 }
 

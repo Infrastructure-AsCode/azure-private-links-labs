@@ -20,6 +20,9 @@ param testVMAdminUsername string = 'iac-admin'
 @secure()
 param testVMAdminPassword string
 
+@description('Home IP address. Used to restrict access to SQL Server.')
+param homeIP string
+
 var resourceGroupName = '${prefix}-rg'
 
 resource rg 'Microsoft.Resources/resourceGroups@2022-09-01' = {
@@ -76,6 +79,7 @@ module sql 'modules/sql.bicep' = {
     prefix: prefix
     sqlAdminsGroupObjectId: sqlAdminsGroupObjectId
     sqlAdminsGroupName: sqlAdminsGroupName
+    homeIP: homeIP
   }
 }
 

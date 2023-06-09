@@ -38,44 +38,26 @@ https://login.microsoftonline.com/common/oauth2/authorize?client_id=41b23e61-6c1
 3. Select the account that has the `Global administrator` role if prompted.
 4. On the `Permissions requested` page, select `Accept`.
 
-## Task #3 - create Azure AG Group for SQL Server Administrators
+## Task #3 - deploy lab resources
 
-We will be using Azure AD authentication for Azure SQL Server. A good practice is to create a separate Azure AD group for SQL Server administrators. This will allow us to easily manage SQL Server administrators in the future. We will name this group `iac-ws5-sql-administrators`.
-
-```powershell
-# create Azure AD group for SQL Server administrators
-az ad group create --display-name iac-ws5-sql-administrators --mail-nickname iac-ws5-sql-administrators
-```
-
-Let's add your user account to this group. 
-
-```powershell
-# Get your signed-in user object ID
-$signedIdUserObjectId = (az ad signed-in-user show --query id -otsv)
-
-# Add your user account to iac-ws5-sql-administrators group
-az ad group member add -g iac-ws5-sql-administrators --member-id $signedIdUserObjectId
-
-# Check that user was added. Get list of iac-ws5-sql-administrators group members
-az ad group member list -g iac-ws5-sql-administrators
-```
-
-## Task #4 - deploy lab resources
+Now, let's deploy lab resources.
 
 ```powershell
 # change directory to iac folder
 cd iac
 
 # Deploy Bicep master template
-./deploy.ps1
+ ./deploy.ps1
 ```
 
 Note! You will need to provide admin password for test VM!
 
+![deploy](../../assets/images/lab-01/deploy.png)
+
 !!! info "Estimated deployment time"
     35-40 minutes.
 
-## Task #5 - configure Azure VPN client
+## Task #4 - configure Azure VPN client
 
 First, check that Azure VPN client is installed on your machine. If not, download and install it from [here](https://www.microsoft.com/en-us/p/azure-vpn-client/9np355qt2sqb?activetab=pivot:overviewtab), or use `winget` (only for Windows users):
 
@@ -115,7 +97,7 @@ ipconfig
 
 ![ipconfig](../../assets/images/lab-01/ipconfig.png)
 
-## Task #6 - test connectivity to test VM
+## Task #5 - test connectivity to test VM
 
 Get test VM private IP address 
 
@@ -133,7 +115,7 @@ Make sure that Azure VPN is connected and use this IP and connect to test VM usi
 You should be able to remote into test VM.
 
 
-## Task #7 - test connectivity to SQL database
+## Task #6 - test connectivity to SQL database
 
 Start `Azure Data Studio`. If you haven't install it yet, download and install [Azure Data Studio](https://docs.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver15&WT.mc_id=AZ-MVP-5003837) or install it with `winget` (Windows only).
 
@@ -163,7 +145,7 @@ You should now be connected to Azure SQL Server.
 ![test-sql-2](../../assets/images/lab-01/test-sql-2.png)
 
 
-## Task #8 - test connectivity to Azure KeyVault
+## Task #7 - test connectivity to Azure KeyVault
 
 Test that you have access to Azure KeyVault. 
 
