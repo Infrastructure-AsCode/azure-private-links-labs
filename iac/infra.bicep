@@ -50,17 +50,6 @@ module vpnGateway 'modules/vpnGateway.bicep' = {
   }
 }
 
-module dnsResolver 'modules/dnsResolver.bicep' = {
-  scope: rg
-  name: 'Deploy-Private-DNS-Resolver'
-  params: {
-    location: location
-    prefix: prefix
-    subnetId: '${vnet.outputs.id}/subnets/dnsresolver-inbound-snet'
-    vnetId: vnet.outputs.id
-  }
-}
-
 module keyvault 'modules/keyvault.bicep' = {
   scope: rg
   name: 'Deploy-KeyVault'

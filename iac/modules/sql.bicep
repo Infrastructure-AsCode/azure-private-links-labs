@@ -44,6 +44,7 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2022-08-01-preview' = {
     autoPauseDelay: 0
     requestedBackupStorageRedundancy: 'Local'
     isLedgerOn: false
+    sampleName: 'AdventureWorksLT'
   }
 }
 

@@ -4,7 +4,7 @@ param vnetAddressPrefix string
 
 var virtualNetworkName = '${prefix}-vnet'
 
-resource vnet 'Microsoft.Network/virtualNetworks@2022-07-01' = {
+resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' = {
   name: virtualNetworkName
   location: location
   properties: {
@@ -46,6 +46,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2022-07-01' = {
         name: 'plinks-snet'
         properties: {        
           addressPrefix: '${vnetAddressPrefix}.1.0/24'
+          privateEndpointNetworkPolicies: 'Disabled'
         }
       }
     ] 
