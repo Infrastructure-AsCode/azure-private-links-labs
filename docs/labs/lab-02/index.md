@@ -1,120 +1,127 @@
-# lab-02 - create a private endpoint for Azure KeyVault using Bicep
+# lab-02 - create a private endpoint for Azure SQL using Azure Portal
 
 There are several ways you can create Azure Private Endpoint. You can use Azure Portal, Azure CLI, Azure PowerShell, ARM templates, or Bicep.
-In this lab, we'll use Bicep to create a private endpoint for Azure KeyVault.
+In this lab, we'll use Azure POrtal to create a private endpoint for Azure SQL Server.
 
-## Task #1 - implement Bicep template
+## Task #1 - create a private endpoint
 
-Create new file `keyvaultPrivateEndpoint.bicep` with the following content:
+In the Azure portal, search for and select `iac-ws5-sql` instance of Azure SQL Server. Navigate to `Security -> Networking -> Private access` and click on `+ Create private endpoint` button.
 
-```bicep
-param location string = resourceGroup().location
-param prefix string = 'iac-ws5'
+![01](../../assets/images/lab-02/ple1.png)
 
-var uniqueStr = uniqueString(subscription().subscriptionId, resourceGroup().id)
-var kvName = '${prefix}-${uniqueStr}-kv'
+At the `Create a private endpoint -> Basic` tab, fill in the following parameters:
 
-var pleName = '${kvName}-ple'
+| Parameter | Value |
+|---|---|
+| Subscription | your subscription |
+| Resource group | `iac-ws5-rg` |
+| Name | `iac-ws5-sql-ple` |
+| Network Interface Name | `iac-ws5-sql-ple-nic` |
+| Region | `West Europe` | 
 
-resource kv 'Microsoft.KeyVault/vaults@2023-02-01' existing = {
-  name: kvName
-}
+![02](../../assets/images/lab-02/ple2.png)
 
-var virtualNetworkName = '${prefix}-vnet'
-resource vnet 'Microsoft.Network/virtualNetworks@2022-11-01' existing = {
-  name: virtualNetworkName
-}
+Click on `Next: Resource >` button and select `sqlServer` as a `Target sub-resource` parameter under `Resource` tab:
 
-var privateDnsZoneName = 'privatelink.vaultcore.azure.net' 
+![03](../../assets/images/lab-02/ple3.png)
 
-resource privateDnsZone 'Microsoft.Network/privateDnsZones@2020-06-01' = {
-  name: privateDnsZoneName
-  location: 'global'
-}
+Click on `Next: Virtual Network >` button and fill in the following parameters under `Virtual Network` tab:
 
-resource privateDnsZoneVnetLink 'Microsoft.Network/privateDnsZones/virtualNetworkLinks@2020-06-01' = {
-  name: uniqueString(vnet.id)
-  parent: privateDnsZone
-  location: 'global'
-  properties: {
-    registrationEnabled: false
-    virtualNetwork: {
-      id: vnet.id
-    }
-  }  
-}
+| Parameter | Value |
+|---|---|
+| Virtual network | `iac-ws5-vnet` |
+| Subnet | `plinks-snet` |
 
-var groupName = 'vault'
-resource privateEndpoint 'Microsoft.Network/privateEndpoints@2022-09-01' = {
-  name: pleName
-  location: location
-  properties: {
-    privateLinkServiceConnections: [
-      {
-        name: pleName
-        properties: {
-          groupIds: [
-            groupName
-          ]
-          privateLinkServiceId: kv.id
-        }
-      }
-    ]
-    subnet: {
-      id: '${vnet.id}/subnets/plinks-snet'
-    }
-  }
-}
+Keep the rest of parameters as default.
 
-resource privateEndpointDns 'Microsoft.Network/privateEndpoints/privateDnsZoneGroups@2022-09-01' = {
-  name: '${groupName}-PrivateDnsZoneGroup'
-  parent: privateEndpoint
-  properties:{
-    privateDnsZoneConfigs: [
-      {
-        name: privateDnsZoneName
-        properties:{
-          privateDnsZoneId: privateDnsZone.id
-        }
-      }
-    ]
-  }
-}
-```
+![04](../../assets/images/lab-02/ple4.png)
 
-Save the file and deploy it using the following command:
+Click on `Next: DNS >` button and set the following parameters under `DNS` tab:
 
-```powershell
-az deployment group create -g iac-ws5-rg --template-file .\keyvaultPrivateEndpoint.bicep -n 'Deploy-KeyVault-PrivateEndpoint'
-```
+| Parameter | Value |
+|---|---|
+| Subscription | You subscription   |
+| Resource group | `iac-ws5-rg` |
 
-It will deploy the following Azure resources:
+![05](../../assets/images/lab-02/ple5.png)
 
-- [Microsoft.Network/privateEndpoints](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/privateendpoints): The private endpoint that you use to access the instance of Azure KeyVault.
-- [Microsoft.Network/privateDnsZones](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/privatednszones): The zone that you use to resolve the private endpoint IP address. In our case it's `privatelink.vaultcore.azure.net`
-- [Microsoft.Network/privateDnsZones/virtualNetworkLinks](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/privatednszones/virtualnetworklinks): The virtual network link that you use to associate the private DNS zone with a virtual network.
-- [Microsoft.Network/privateEndpoints/privateDnsZoneGroups](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/privateendpoints/privateDnsZoneGroups): The zone group that you use to associate the private endpoint with a private DNS zone. In our case it's `vault`
+Click on `Next: Tags >` button, skip this step (or add tags if you want to), and click on `Next: Review + create >` button.
 
-## Task #2 - access the Azure KeyVault privately from the testVM
+It will do a validation check and if everything is valid, click on `Create` button to create a private endpoint. If there re some validation errors, fix them and try again.
 
-Connect to your testVM using RDP, open PowerShell console and try to resolve the Azure KeyVault DNS name:
+![06](../../assets/images/lab-02/ple6.png)
+
+It will take a few minutes to deploy private endpoint. 
+
+## Task #2 - check what was deployed
+
+Open `iac-ws5-sql-ple` private endpoint resource and check information under `Overview` tab:
+
+![07](../../assets/images/lab-02/ple7.png)
+
+From here we can see that private endpoint is associated with `iac-ws5-sql` instance of Azure SQL Server, it uses `iac-ws5-ple-nic` Network interface that is deployed into `plinks-snet` subnet in `iac-ws5-vnet` virtual network.
+
+Now, open `iac-ws5-sql-ple-nic` network interface resource and check information under `Overview` tab:
+
+![08](../../assets/images/lab-02/ple8.png)
+
+Here we can find what private IP was assigned to the private endpoint. In my case, it was `10.10.1.4`. The same information you can find under `Connected devices` tab of `iac-ws5-vnet` Virtual network resource:
+
+![09](../../assets/images/lab-02/ple9.png)
+
+Back to `iac-ws5-sql-ple` private endpoint resource and check information under `DNS configuration` tab:
+
+![10](../../assets/images/lab-02/ple10.png)
+
+What we can see here is that SQL Server instance is now has `iac-ws5-sql.privatelink.database.windows.net` FQDN which will be resolved with `10.10.1.4` IP address.
+
+Finally, open `privatelink.database.windows.net` Private DNS Zone resource and check information under `Overview` tab:
+
+![11](../../assets/images/lab-02/ple11.png)
+
+Here you can see that a new A-record was created for `iac-ws5-sql` instance pointing to IP address of `iac-ws5-sql-ple-nic` network interface.
+
+## Task #3 - resolve private endpoint
+
+RDP into testVM, open PowerShell console, and run the following command:
 
 ```powershell
-Resolve-DnsName -Name 'iac-ws5-<uniqueStr>-kv.vault.azure.net'
+nslookup iac-ws5-sql.database.windows.net
 ```
 
-For my keyvault instance it returns the following result:
+You'll receive a message similar to what is displayed below:
 
-```text
-Name                             Type     TTL   Section    NameHost
-----                             ----     ---   -------    --------
-iac-ws5-....-kv.vault.azure.net  CNAME    60    Answer     iac-ws5-....-kv.privatelink.vaultcore.azure.net
+```powershell
+Server:  UnKnown
+Address:  168.63.129.16
 
-
-Name       : iac-ws5-....-kv.privatelink.vaultcore.azure.net
-QueryType  : A
-TTL        : 10
-Section    : Answer
-IP4Address : 10.10.1.4
+Non-authoritative answer:
+Name:    iac-ws5-sql.privatelink.database.windows.net
+Address:  10.10.1.4
+Aliases:  iac-ws5-sql.database.windows.net
 ```
 
+As you can see from test VM it resolves `iac-ws5-sql.database.windows.net` to private IP address of Azure SQL Server instance.
+
+Run the same command from your PC and check the output. 
+
+```powershell
+nslookup iac-ws5-sql.database.windows.net
+```	
+
+You'll receive a message similar to what is displayed below:
+
+```powershell
+Server:  dnscache01.get.no
+Address:  80.232.93.171
+
+Non-authoritative answer:
+Name:    cr4.westeurope1-a.control.database.windows.net
+Address:  104.40.168.105
+Aliases:  iac-ws5-sql.database.windows.net
+          iac-ws5-sql.privatelink.database.windows.net
+          dataslice9.westeurope.database.windows.net
+          dataslice9westeurope.trafficmanager.net
+```
+
+As you can see, from your PC it resolves `iac-ws5-sql.database.windows.net` to public IP address of Azure SQL Server instance. 

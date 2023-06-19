@@ -50,7 +50,12 @@ cd iac
  ./deploy.ps1
 ```
 
-Note! You will need to provide admin password for test VM!
+Note! You will need to provide admin password for test VM. Note that supplied password must be between 8-123 characters long and must satisfy `at least 3` of password complexity requirements from the following:
+- Contains an uppercase character
+- Contains a lowercase character
+- Contains a numeric digit
+- Contains a special character
+- Control characters are not allowed
 
 ![deploy](../../assets/images/lab-01/deploy.png)
 

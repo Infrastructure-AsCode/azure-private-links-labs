@@ -21,7 +21,8 @@ Workshop is organized as a combination of theoretical blocks with slides and han
 - Welcome + practical information
 - Azure Azure Private Link overview (Slides)
 - [Lab-01](labs/lab-01/index.md) - provisioning of lab resources
-- [Lab-02](labs/lab-02/index.md) - create a private endpoint for Azure KeyVault using Bicep
+- [Lab-02](labs/lab-02/index.md) - create a private endpoint for Azure SQL using Azure Portal
+- [Lab-03](labs/lab-03/index.md) - create a private endpoint for Azure KeyVault using Bicep
 - [Lab-??](labs/lab-xx/index.md) - cleaning up resources
 
 ## Prerequisites
