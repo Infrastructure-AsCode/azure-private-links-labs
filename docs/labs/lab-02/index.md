@@ -183,3 +183,12 @@ iac-ws5-sql.database.windows.net               A      82234 Answer     10.10.1.4
 
 Now, make sure that your Azure VPN connection is established, and try to reconnect to `iac-ws5-sql.database.windows.net` from Azure Data Studio. You'll be able to connect.
 
+## Task #7 - cleaning up
+
+Disconnect from Azure SQL Server instance and delete what you have added into `hosts` file.
+
+Check that `iac-ws5-sql.database.windows.net` is now resolved to public IP address.
+
+```powershell
+Resolve-DnsName iac-ws5-sql.database.windows.net
+```

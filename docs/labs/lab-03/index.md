@@ -2,7 +2,7 @@
 
 There are several ways you can create Azure Private Endpoint. Previous lab demonstrated how to create it using Azure Portal. In this lab, we'll use Bicep to create a private endpoint for Azure KeyVault.
 
-## Task #1 - implement Bicep template
+## Task #1 - implement Bicep template for Azure KeyVault private endpoint
 
 Create new file `keyvaultPrivateEndpoint.bicep` with the following content:
 
