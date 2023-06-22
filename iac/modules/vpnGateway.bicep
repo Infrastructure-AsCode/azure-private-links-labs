@@ -57,7 +57,7 @@ resource virtualNetworkGateways 'Microsoft.Network/virtualNetworkGateways@2022-0
     vpnType: 'RouteBased'
     enableBgp: false
     activeActive: false
-    vpnClientConfiguration: {
+    vpnClientConfiguration: {      
       vpnClientAddressPool: {
         addressPrefixes: vpnClientSddressPrefixes
       }

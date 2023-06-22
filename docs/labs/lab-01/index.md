@@ -60,7 +60,7 @@ Note! You will need to provide admin password for test VM. Note that supplied pa
 ![deploy](../../assets/images/lab-01/deploy.png)
 
 !!! info "Estimated deployment time"
-    35-40 minutes.
+    Because of Azure Virtual Network Gateway, deployment takes 35-40 minutes.
 
 ## Task #4 - configure Azure VPN client
 
