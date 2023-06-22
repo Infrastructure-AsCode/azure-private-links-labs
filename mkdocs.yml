@@ -6,9 +6,6 @@ nav:
   - Homepage: index.md
   - Prerequisites: prerequisites.md
   - Lab 01 - Provision lab resources: labs/lab-01/index.md
-  - Lab 02 - Create a private endpoint for Azure SQL using Azure Portal: labs/lab-02/index.md
-  - Lab 03 - Create a private endpoint for Azure KeyVault using Bicep: labs/lab-03/index.md
-  - Lab xx - Clean up lab resources: labs/lab-xx/index.md
 theme:
   name: material
   font:

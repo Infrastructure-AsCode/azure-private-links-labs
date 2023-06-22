@@ -1,4 +1,4 @@
-# lab-04 - deploy Private DNS Resolver
+# lab-04 - deploy Private DNS Resolver using Bicep
 
 Azure DNS Private Resolver is a service that enables you to query Azure DNS private zones from an on-premises environment (and vice versa) without deploying VM based DNS servers. 
 
@@ -95,7 +95,7 @@ Now, open Azure VPN CLient, disconnect your active connection and then remove it
 
 ![02](../../assets/images/lab-04/vpn1.png)
 
-If you still have the original VPN client profile configuration file, use it. If you can't find it, download it again as described at `Task #4` of [lab-01](../lab-01/index.md). 
+If you still have the original VPN client profile configuration file, use it. If you can't find it, download it again as described at [Task #4 of lab-01](../lab-01/index.md#task-4-configure-azure-vpn-client). 
 
 Open `iac-ws5-vgw\AzureVPN\azurevpnconfig.xml` file (most likely under `Downloads` folder).
 
