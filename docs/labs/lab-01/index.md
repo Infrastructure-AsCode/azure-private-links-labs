@@ -120,7 +120,21 @@ Make sure that Azure VPN is connected and use this IP and connect to test VM usi
 You should be able to remote into test VM.
 
 
-## Task #6 - test connectivity to SQL database
+## Task #6 - configure testVM
+
+While you are the testVM, download and install latest version of `az cli` from [this link](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837)
+
+Open PowerShell and login to your azure account by running:
+
+```powershell
+az login
+
+# Check that you logged in and check that you use correct subscription (if you have more than one subscription)
+az account show
+```
+```	
+
+## Task #7 - test connectivity to SQL database
 
 Start `Azure Data Studio`. If you haven't install it yet, download and install [Azure Data Studio](https://docs.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver15&WT.mc_id=AZ-MVP-5003837) or install it with `winget` (Windows only).
 
@@ -150,7 +164,7 @@ You should now be connected to Azure SQL Server.
 ![test-sql-2](../../assets/images/lab-01/test-sql-2.png)
 
 
-## Task #7 - test connectivity to Azure KeyVault
+## Task #8 - test connectivity to Azure KeyVault
 
 Test that you have access to Azure KeyVault. 
 

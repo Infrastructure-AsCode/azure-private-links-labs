@@ -1,7 +1,6 @@
 # lab-03 - create a private endpoint for Azure KeyVault using Bicep
 
-There are several ways you can create Azure Private Endpoint. You can use Azure Portal, Azure CLI, Azure PowerShell, ARM templates, or Bicep.
-In this lab, we'll use Bicep to create a private endpoint for Azure KeyVault.
+There are several ways you can create Azure Private Endpoint. Previous lab demonstrated how to create it using Azure Portal. In this lab, we'll use Bicep to create a private endpoint for Azure KeyVault.
 
 ## Task #1 - implement Bicep template
 
@@ -96,26 +95,104 @@ It will deploy the following Azure resources:
 - [Microsoft.Network/privateDnsZones/virtualNetworkLinks](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/privatednszones/virtualnetworklinks): The virtual network link that you use to associate the private DNS zone with a virtual network.
 - [Microsoft.Network/privateEndpoints/privateDnsZoneGroups](https://learn.microsoft.com/en-us/azure/templates/microsoft.network/privateendpoints/privateDnsZoneGroups): The zone group that you use to associate the private endpoint with a private DNS zone. In our case it's `vault`
 
-## Task #2 - access the Azure KeyVault privately from the testVM
+## Task #2 - resolve private endpoint
+
+First, get your KeyVault name. KeyVault name is unique, so the name of the KeyVault will be different for you. You can get the name using the following command:
+
+```powershell
+az keyvault list -g iac-ws5-rg --query '[].name' -o tsv
+```
 
 Connect to your testVM using RDP, open PowerShell console and try to resolve the Azure KeyVault DNS name:
 
 ```powershell
-Resolve-DnsName -Name 'iac-ws5-<uniqueStr>-kv.vault.azure.net'
+nslookup 'YOUR-KEYVAULT-NAME.vault.azure.net'
 ```
 
-For my keyvault instance it returns the following result:
+You'll see response similar to what is displayed below:
 
 ```text
-Name                             Type     TTL   Section    NameHost
-----                             ----     ---   -------    --------
-iac-ws5-....-kv.vault.azure.net  CNAME    60    Answer     iac-ws5-....-kv.privatelink.vaultcore.azure.net
+Server:  UnKnown
+Address:  168.63.129.16
 
-
-Name       : iac-ws5-....-kv.privatelink.vaultcore.azure.net
-QueryType  : A
-TTL        : 10
-Section    : Answer
-IP4Address : 10.10.1.4
+Non-authoritative answer:
+Name:    iac-ws5-...-kv.privatelink.vaultcore.azure.net
+Address:  10.10.1.5
+Aliases:  iac-ws5-...-kv.vault.azure.net
 ```
 
+Now, try to resolve it from your PC. 
+
+
+```powershell
+$keyvaultName = (az keyvault list -g iac-ws5-rg --query '[].name' -o tsv)
+nslookup "$keyvaultName.vault.azure.net"
+```	
+
+You'll receive message similar to what is displayed below:
+
+```powershell
+Server:  UnKnown
+Address:  168.63.129.16
+
+Non-authoritative answer:
+Name:    azkms-prod-weu-a.westeurope.cloudapp.azure.com
+Address:  20.61.103.228
+Aliases:  iac-ws5-...-kv.vault.azure.net
+          data-prod-weu.vaultcore.azure.net
+          data-prod-weu-region.vaultcore.azure.net
+```
+
+As with private endpoint for SQL server, from your PC `YOUR-KEYVAULT.vault.azure.net` is resolved to public IP address and from testVM it's resolved to private IP address of KeyVault instance. 
+This is because your PC doesn't use Azure DNS server and doesn't know anything about `privatelink.vaultcore.azure.net` Private DNS Zone.  
+
+## Task #3 - disable public access to Azure keyVault
+
+First, let's check that you can access Azure KeyVault from your PC and from testVM. 
+
+From your PC, run the following command to get list of secrets:
+
+```powershell
+$keyvaultName = (az keyvault list -g iac-ws5-rg --query '[].name' -o tsv)
+az keyvault secret list --vault $keyvaultName
+```
+
+RDP to the testVM, open PowerShell and run the same command:
+
+```powershell
+az keyvault secret list --vault YOUR-KEYVAULT-NAME
+```
+
+You should be able to get (an empty) list of secrets from both locations.
+
+Now, let's disable public access to the keyVault. Navigate to `Networking->Firewalls and virtual networks` tab of KeyVault instance and select `Disable public access` for `Allow access from...`. Click `Apply`.
+
+![01](../../assets/images/lab-03/kv1.png)
+
+
+Now, try to get list of secrets again. From your PC, run the following command:
+
+```powershell
+
+```powershell
+az keyvault secret list --vault $keyvaultName
+```
+
+You'll receive an error similar to what is displayed below:
+
+```txt
+(Forbidden) Public network access is disabled and request is not from a trusted service nor via an approved private link.
+Inner error: {
+    "code": "ForbiddenByConnection"
+}    
+```
+
+Try to re-run the same command from testVM. 
+
+```powershell
+az keyvault secret list --vault YOUR-KEYVAULT-NAME
+```
+
+You will still be able to get list of secrets. This is because testVM uses private endpoint to access Azure KeyVault.
+
+At the next lab we will deploy `Azure Private DNS resolver` and configure Azure VPN client to be able resolve private endpoints from your PC.
