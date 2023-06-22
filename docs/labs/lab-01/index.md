@@ -124,7 +124,7 @@ You should be able to remote into test VM.
 
 While you are the testVM, download and install latest version of `az cli` from [this link](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837)
 
-Open PowerShell and login to your azure account by running:
+When installed, open PowerShell and login to your azure account by running:
 
 ```powershell
 az login
@@ -132,7 +132,6 @@ az login
 # Check that you logged in and check that you use correct subscription (if you have more than one subscription)
 az account show
 ```
-```	
 
 ## Task #7 - test connectivity to SQL database
 
