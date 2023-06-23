@@ -86,4 +86,4 @@ extra:
 extra_css:
   - assets/stylesheets/extra.css
 
-#repo_url: https://github.com/Infrastructure-AsCode/azure-private-links-labs
+repo_url: https://github.com/Infrastructure-AsCode/azure-private-links-labs
