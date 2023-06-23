@@ -6,6 +6,7 @@ nav:
   - Homepage: index.md
   - Prerequisites: prerequisites.md
   - Lab 01 - Provision lab resources: labs/lab-01/index.md
+  - Lab 07 - Cleaning up resources: labs/lab-07/index.md
 theme:
   name: material
   font:
