@@ -75,7 +75,7 @@ The `deploy.ps1` script does the following things:
 - it gets your signed in user object id and adds it to `iac-ws5-sql-administrators` group (you will be SQL Server admin)
 - it gets your egress public IP address (by calling `https://ifconfig.me/ip`)
 - it asks you for test VM admin password
-- it deploys `iac/infra.bicep` Bicep template at the current subscription scope
+- it deploys `iac/infra.bicep` Bicep template at the current subscription scope with parameters collected above (`signedInUserId`, `sqlAdminsGroupName`, `sqlAdminsGroupObjectId`, `homeIP`)
 
 !!! info "Estimated deployment time"
     Because of Azure Virtual Network Gateway, deployment takes approx. 35-40 minutes.
