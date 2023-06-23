@@ -19,7 +19,6 @@ az provider register -n Microsoft.Network
 az provider register -n Microsoft.OperationalInsights
 az provider register -n Microsoft.Storage
 az provider register -n Microsoft.Sql
-az provider register -n Microsoft.DocumentDB
 az provider register -n Microsoft.Compute
 az provider register -n Microsoft.KeyVault
 ```
