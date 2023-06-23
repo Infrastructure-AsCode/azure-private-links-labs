@@ -4,11 +4,11 @@ As always, we need to provision lab environment before we can start working on t
 
 Infrastructure for Lab environment is implemented using `Bicep` and code is located under [iac](https://github.com/Infrastructure-AsCode/azure-private-links-labs/tree/main/iac) folder. Most of the resources are implemented as Bicep [modules](https://github.com/Infrastructure-AsCode/azure-private-links-labs/tree/main/iac/modules). The master orchestration Bicep file is [infra.bicep](https://github.com/Infrastructure-AsCode/azure-private-links-labs/blob/main/iac/infra.bicep). It orchestrates deployment of the following resources:
 
-- Private Virtual Network
-- Azure Cosmos DB
-- Azure Storage Account
-
-You can learn implementation details and code structure, but for the efficiency reasons, I pre-built Bicep code into ARM template and made it possible to deploy it right from Azure portal.
+- Azure Private Virtual Network
+- Azure Virtual Network Gateway
+- Azure SQL Server with SQL Database
+- Azure Key Vault
+- Azure Virtual Machine for testing
 
 ## Task #1 - Register required resource providers
 
