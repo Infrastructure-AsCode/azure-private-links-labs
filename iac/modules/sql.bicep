@@ -5,7 +5,8 @@ param sqlAdminsGroupName string
 param homeIP string
 param tenantId string = tenant().tenantId
 
-var sqlServerName = '${prefix}-sql'
+var uniqueStr = uniqueString(subscription().subscriptionId, resourceGroup().id)
+var sqlServerName = '${prefix}-${uniqueStr}-sql'
 
 resource sqlServer 'Microsoft.Sql/servers@2022-08-01-preview' = {
   name: sqlServerName
