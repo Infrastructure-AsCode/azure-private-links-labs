@@ -8,11 +8,11 @@ Infrastructure for Lab environment is implemented using `Bicep` and code is loca
 - Azure Private Virtual Network `iac-ws5-vnet` with the following subnets:
     - `GatewaySubnet` - for Azure Virtual Network Gateway
     - `dnsresolver-inbound-snet` - for Azure DNS Private Resolver inbound endpoint 
-    - `testvm-snet` - for test VM 
+    - `testvm-snet` - to deploy test VM 
     - `plinks-snet` - for Azure Private Endpoints
 - Azure Virtual Network Gateway with Point-To-Site VPN configuration
-- Azure SQL Server with `AdventureWorksLT` sample database
-- Azure Key Vault
+- Azure SQL Server with `AdventureWorksLT` sample database. SQL Server is configured with Azure AD authentication and `iac-ws5-sql-administrators` Azure AD group is set as SQL Server administrators
+- Azure Key Vault to further implement Private Endpoint for Azure Key Vault
 - Azure Virtual Machine `testVM` (with nic and disk) for testing
 
 ## Task #1 - Register required resource providers
