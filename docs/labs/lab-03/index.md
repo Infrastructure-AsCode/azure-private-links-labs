@@ -81,10 +81,9 @@ resource privateEndpointDns 'Microsoft.Network/privateEndpoints/privateDnsZoneGr
 }
 ```
 
-Save the file and deploy it using the following command:
+Save the file and deploy Bicep template using the following command:
 
 ```powershell
-# Deploy the Bicep template
 az deployment group create -g iac-ws5-rg --template-file .\keyvaultPrivateEndpoint.bicep -n 'Deploy-KeyVault-PrivateEndpoint'
 ```
 
@@ -97,7 +96,7 @@ It will deploy the following Azure resources:
 
 ## Task #2 - resolve private endpoint
 
-First, get your KeyVault name. KeyVault name is unique, so the name of the KeyVault will be different for you. You can get the name using the following command:
+First, get your KeyVault name. KeyVault name is unique, so the name of your's KeyVault will be different. You can get the name using the following command:
 
 ```powershell
 az keyvault list -g iac-ws5-rg --query '[].name' -o tsv
@@ -106,7 +105,8 @@ az keyvault list -g iac-ws5-rg --query '[].name' -o tsv
 Connect to your testVM using RDP, open PowerShell console and try to resolve the Azure KeyVault DNS name:
 
 ```powershell
-nslookup 'YOUR-KEYVAULT-NAME.vault.azure.net'
+$keyvaultName = (az keyvault list -g iac-ws5-rg --query '[].name' -o tsv)
+Resolve-DnsName "$keyvaultName.vault.azure.net"
 ```
 
 You'll see response similar to what is displayed below:
@@ -126,7 +126,7 @@ Now, try to resolve it from your PC.
 
 ```powershell
 $keyvaultName = (az keyvault list -g iac-ws5-rg --query '[].name' -o tsv)
-nslookup "$keyvaultName.vault.azure.net"
+Resolve-DnsName "$keyvaultName.vault.azure.net"
 ```	
 
 You'll receive message similar to what is displayed below:
@@ -160,10 +160,11 @@ az keyvault secret list --vault $keyvaultName
 RDP to the testVM, open PowerShell and run the same command:
 
 ```powershell
-az keyvault secret list --vault YOUR-KEYVAULT-NAME
+$keyvaultName = (az keyvault list -g iac-ws5-rg --query '[].name' -o tsv)
+az keyvault secret list --vault $keyvaultName
 ```
 
-You should be able to get (an empty) list of secrets from both locations.
+You should be able to get a list of secrets from both locations.
 
 Now, let's disable public access to the keyVault. Navigate to `Networking->Firewalls and virtual networks` tab of KeyVault instance and select `Disable public access` for `Allow access from...`. Click `Apply`.
 
@@ -171,8 +172,6 @@ Now, let's disable public access to the keyVault. Navigate to `Networking->Firew
 
 
 Now, try to get list of secrets again. From your PC, run the following command:
-
-```powershell
 
 ```powershell
 az keyvault secret list --vault $keyvaultName
@@ -190,7 +189,7 @@ Inner error: {
 Try to re-run the same command from testVM. 
 
 ```powershell
-az keyvault secret list --vault YOUR-KEYVAULT-NAME
+az keyvault secret list --vault $keyvaultName
 ```
 
 You will still be able to get list of secrets. This is because testVM uses private endpoint to access Azure KeyVault.

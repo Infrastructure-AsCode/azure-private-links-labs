@@ -5,13 +5,13 @@ In this lab, we'll use Azure POrtal to create a private endpoint for Azure SQL S
 
 ## Task #1 - test connectivity to SQL Server
 
-If you already created a connection to Azure SQL Server in Azure Data Studio (`Task #6` of [lab-01](../lab-01/index.md)), use one. Otherwise, create a new connection to Azure SQL Server and connect to it. You should be able to connect to Azure SQL Server.
+If you already created a connection to Azure SQL Server in Azure Data Studio ([Task #7 of lab-01](../lab-01/index.md#task-7-test-connectivity-to-sql-database)), use one. Otherwise, create a new connection to Azure SQL Server and connect to it. You should be able to connect to Azure SQL Server.
 
 ![sql1](../../assets/images/lab-02/sql1.png)
 
 ## Task #2 - create a private endpoint
 
-In the Azure portal, search for and select `iac-ws5-sql` instance of Azure SQL Server. Navigate to `Security -> Networking -> Private access` and click on `+ Create private endpoint` button.
+In the Azure portal, search for and select your SQL Server instance. Navigate to `Security -> Networking -> Private access` and click on `+ Create private endpoint` button.
 
 ![01](../../assets/images/lab-02/ple1.png)
 
@@ -21,8 +21,8 @@ At the `Create a private endpoint -> Basic` tab, fill in the following parameter
 |---|---|
 | Subscription | your subscription |
 | Resource group | `iac-ws5-rg` |
-| Name | `iac-ws5-sql-ple` |
-| Network Interface Name | `iac-ws5-sql-ple-nic` |
+| Name | `YOUR-SQL-SERVER-NAME-ple` |
+| Network Interface Name | `YOUR-SQL-SERVER-NAME-ple-nic` |
 | Region | `West Europe` | 
 
 ![02](../../assets/images/lab-02/ple2.png)
@@ -61,13 +61,13 @@ It will take a few minutes to deploy private endpoint.
 
 ## Task #3 - check what was deployed
 
-Open `iac-ws5-sql-ple` private endpoint resource and check information under `Overview` tab:
+Open `YOUR-SQL-SERVER-NAME-ple` private endpoint resource and check information under `Overview` tab:
 
 ![07](../../assets/images/lab-02/ple7.png)
 
-From here we can see that private endpoint is associated with `iac-ws5-sql` instance of Azure SQL Server, it uses `iac-ws5-ple-nic` Network interface that is deployed into `plinks-snet` subnet in `iac-ws5-vnet` virtual network.
+From here we can see that private endpoint is associated with `YOUR-SQL-SERVER-NAME` instance of Azure SQL Server, it uses `YOUR-SQL-SERVER-NAME-ple-nic` Network interface that is deployed into `plinks-snet` subnet in `iac-ws5-vnet` virtual network.
 
-Now, open `iac-ws5-sql-ple-nic` network interface resource and check information under `Overview` tab:
+Now, open `YOUR-SQL-SERVER-NAME-ple-nic` network interface resource and check information under `Overview` tab:
 
 ![08](../../assets/images/lab-02/ple8.png)
 
@@ -75,24 +75,25 @@ Here we can find what private IP was assigned to the private endpoint. In my cas
 
 ![09](../../assets/images/lab-02/ple9.png)
 
-Back to `iac-ws5-sql-ple` private endpoint resource and check information under `DNS configuration` tab:
+Back to `YOUR-SQL-SERVER-NAME-ple` private endpoint resource and check information under `DNS configuration` tab:
 
 ![10](../../assets/images/lab-02/ple10.png)
 
-What we can see here is that SQL Server instance is now has `iac-ws5-sql.privatelink.database.windows.net` FQDN which will be resolved with `10.10.1.4` IP address.
+What we can see here is that SQL Server instance is now has `YOUR-SQL-SERVER-NAME.privatelink.database.windows.net` FQDN which will be resolved with `10.10.1.4` IP address.
 
 Finally, open `privatelink.database.windows.net` Private DNS Zone resource and check information under `Overview` tab:
 
 ![11](../../assets/images/lab-02/ple11.png)
 
-Here you can see that a new A-record was created for `iac-ws5-sql` instance pointing to IP address of `iac-ws5-sql-ple-nic` network interface.
+Here you can see that a new A-record was created for `YOUR-SQL-SERVER-NAME` instance pointing to IP address of `YOUR-SQL-SERVER-NAME-ple-nic` network interface.
 
 ## Task #4 - resolve private endpoint
 
 RDP into testVM, open PowerShell console, and run the following command:
 
 ```powershell
-nslookup iac-ws5-sql.database.windows.net
+$sqlServerName = (az sql server list -g iac-ws5-rg --query [0].name -o tsv)
+Resolve-DnsName "$sqlServerName.database.windows.net"
 ```
 
 You'll receive a message similar to what is displayed below:
@@ -102,18 +103,19 @@ Server:  UnKnown
 Address:  168.63.129.16
 
 Non-authoritative answer:
-Name:    iac-ws5-sql.privatelink.database.windows.net
+Name:    YOUR-SQL-SERVER-NAME.privatelink.database.windows.net
 Address:  10.10.1.4
-Aliases:  iac-ws5-sql.database.windows.net
+Aliases:  YOUR-SQL-SERVER-NAME.database.windows.net
 ```
 
-As you can see from test VM the `iac-ws5-sql.database.windows.net` is resolved to private IP address of Azure SQL Server instance via `iac-ws5-sql.privatelink.database.windows.net` alias. 
-This is because this VM is deployed on Azure and uses default Azure DNS server (`168.63.129.16`) and it knows about `privatelink.database.windows.net` Private DNS Zone and therefore can resolve `iac-ws5-sql.database.windows.net` to private IP address.
+As you can see from test VM the `YOUR-SQL-SERVER-NAME.database.windows.net` is resolved to private IP address of Azure SQL Server instance via `YOUR-SQL-SERVER-NAME.privatelink.database.windows.net` alias. 
+This is because this VM is deployed on Azure and uses default Azure DNS server (`168.63.129.16`) and it knows about `privatelink.database.windows.net` Private DNS Zone and therefore can resolve `YOUR-SQL-SERVER-NAME.database.windows.net` to private IP address.
 
 Run the same command from your PC and check the output. 
 
 ```powershell
-nslookup iac-ws5-sql.database.windows.net
+$sqlServerName = (az sql server list -g iac-ws5-rg --query [0].name -o tsv)
+Resolve-DnsName "$sqlServerName.database.windows.net"
 ```	
 
 You'll receive a message similar to what is displayed below:
@@ -125,31 +127,31 @@ Address:  80.232.93.171
 Non-authoritative answer:
 Name:    cr4.westeurope1-a.control.database.windows.net
 Address:  104.40.168.105
-Aliases:  iac-ws5-sql.database.windows.net
-          iac-ws5-sql.privatelink.database.windows.net
+Aliases:  YOUR-SQL-SERVER-NAME.database.windows.net
+          YOUR-SQL-SERVER-NAME.privatelink.database.windows.net
           dataslice9.westeurope.database.windows.net
           dataslice9westeurope.trafficmanager.net
 ```
 
-As you can see, from your PC `iac-ws5-sql.database.windows.net` is resolved to public IP address of Azure SQL Server instance. 
-Since your PC uses either your internal home DNS server or DNS server of your internet provider, it doesn't know anything about `privatelink.database.windows.net` Private DNS Zone and therefore resolves `iac-ws5-sql.database.windows.net` to known public IP.  
+As you can see, from your PC `YOUR-SQL-SERVER-NAME.database.windows.net` is resolved to public IP address of Azure SQL Server instance. 
+Since your PC uses either your internal home DNS server or DNS server of your internet provider, it doesn't know anything about `privatelink.database.windows.net` Private DNS Zone and therefore resolves `YOUR-SQL-SERVER-NAME.database.windows.net` to known public IP.  
 
 ## Task #4 - disable public access to Azure SQL server
 
 Assume you would like to disable all public access to your Azure SQL server, and only allow connections from your virtual network.
 
-Navigate to `Networking` page of `iac-ws5-sql` instance of Azure SQL Server, select `Public access` tab, then select `Disable` for `Public network access`.
+Navigate to `Networking` page of `YOUR-SQL-SERVER-NAME` instance of Azure SQL Server, select `Public access` tab, then select `Disable` for `Public network access`.
 
 ![sql2](../../assets/images/lab-02/sql2.png)
 
-Back to Azure Data Studio and try to reconnect to `iac-ws5-sql.database.windows.net` instance. You'll receive an error message similar to this one:
+Back to Azure Data Studio on your PC and try to reconnect to `YOUR-SQL-SERVER-NAME.database.windows.net` instance. You'll receive an error message similar to this one:
 
 ![sql3](../../assets/images/lab-02/sql3.png)
 
 
 ## Task #5 (optional) - test connectivity to SQL server from the testVM
 
-Remote into the testVM, download and install [Azure Data Studio](https://docs.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver15&WT.mc_id=AZ-MVP-5003837) and add new connection to `iac-ws5-sql.database.windows.net` instance of Azure SQL Server as described at `Task #6` of [lab-01](../lab-01/index.md). 
+Remote into the testVM, download and install [Azure Data Studio](https://docs.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver15&WT.mc_id=AZ-MVP-5003837) and add new connection to `YOUR-SQL-SERVER-NAME.database.windows.net` instance of Azure SQL Server as described at [Task #7 of lab-01](../lab-01/index.md#task-7-test-connectivity-to-sql-database). 
 
 You should be able to connect to the SQL server instance from the testVM via private endpoint.
 
@@ -158,37 +160,35 @@ You should be able to connect to the SQL server instance from the testVM via pri
 Edit `c:\Windows\System32\Drivers\etc\hosts` (or `/etc/hosts` on Linux) file on your PC and add the following line. Note that you need to use your private IP address of SQL Server private endpoint.
 
 ```text
-10.10.1.4 iac-ws5-sql.database.windows.net
+10.10.1.4 YOUR-SQL-SERVER-NAME.database.windows.net
 ```
 
 Save `hosts` file. 
 
-Now try to resolve `iac-ws5-sql.database.windows.net` from your PC. 
+Now try to resolve `YOUR-SQL-SERVER-NAME.database.windows.net` from your PC. 
 
 ```powershell
-nslookup iac-ws5-sql.database.windows.net
+$sqlServerName = (az sql server list -g iac-ws5-rg --query [0].name -o tsv)
+Resolve-DnsName "$sqlServerName.database.windows.net"
 ```
 
-if you are on windows, `nslookup` will still resolve it to the public IP address (somehow it doesn't read configuration from `hosts` file). But `Resolve-DnsName` powershell command does.
-
-```powershell
-Resolve-DnsName iac-ws5-sql.database.windows.net
-```
+Now it should be resolved to private IP address of Azure SQL Server instance.
 
 ```powershell
 Name                                           Type   TTL   Section    IPAddress
 ----                                           ----   ---   -------    ---------
-iac-ws5-sql.database.windows.net               A      82234 Answer     10.10.1.4
+YOUR-SQL-SERVER-NAME.database.windows.net               A      82234 Answer     10.10.1.4
 ```
 
-Now, make sure that your Azure VPN connection is established, and try to reconnect to `iac-ws5-sql.database.windows.net` from Azure Data Studio. You'll be able to connect.
+Now, make sure that your Azure VPN connection is established, and try to reconnect to `YOUR-SQL-SERVER-NAME.database.windows.net` from Azure Data Studio. You'll be able to connect.
 
 ## Task #7 - cleaning up
 
-Disconnect from Azure SQL Server instance and delete what you have added into `hosts` file.
+Disconnect from Azure SQL Server instance. 
+Delete what you have added into `hosts` file.
 
-Check that `iac-ws5-sql.database.windows.net` is now resolved to public IP address.
+Check that `YOUR-SQL-SERVER-NAME.database.windows.net` is now resolved to public IP address.
 
 ```powershell
-Resolve-DnsName iac-ws5-sql.database.windows.net
+Resolve-DnsName "$sqlServerName.database.windows.net"
 ```

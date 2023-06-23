@@ -102,34 +102,34 @@ ipconfig
 
 ![ipconfig](../../assets/images/lab-01/ipconfig.png)
 
-## Task #5 - test connectivity to test VM
+## Task #5 - test connectivity to testVM
 
-Get test VM private IP address 
+Get testVM private IP address 
 
 ```powershell
-# Get test VM private IP address
-az vm list-ip-addresses -g iac-ws5-rg -n testVM --query [0].virtualMachine.network.privateIpAddresses[0] -otsv
+az vm list-ip-addresses -g iac-ws5-rg -n testVM --query [0].virtualMachine.network.privateIpAddresses[0] -o tsv
 ```
 
-Most likely, your IP will be `10.10.0.68`, but it can be different...
-
-Make sure that Azure VPN is connected and use this IP and connect to test VM using RDP. Use `iac-admin` as username and password you provided during deployment.
+Make sure that Azure VPN is connected, use this IP and connect to testVM using RDP. Use `iac-admin` as username (if you haven't change it) and use password you provided during deployment.
 
 ![rdp](../../assets/images/lab-01/test-vm.png)
 
-You should be able to remote into test VM.
+You should now be able to remote into testVM.
 
 
 ## Task #6 - configure testVM
 
-While you are the testVM, download and install latest version of `az cli` from [this link](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837)
+While you are at testVM, download and install latest version of `az cli` from [this link](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837)
 
 When installed, open PowerShell and login to your azure account by running:
 
 ```powershell
 az login
+```
 
-# Check that you logged in and check that you use correct subscription (if you have more than one subscription)
+Check that you logged in and that you use correct subscription (if you have more than one subscription):
+
+```powershell
 az account show
 ```
 
@@ -138,9 +138,18 @@ az account show
 Start `Azure Data Studio`. If you haven't install it yet, download and install [Azure Data Studio](https://docs.microsoft.com/en-us/sql/azure-data-studio/download-azure-data-studio?view=sql-server-ver15&WT.mc_id=AZ-MVP-5003837) or install it with `winget` (Windows only).
 
 ```powershell
-# Install SQL Management Studio with winget
 winget install -e --id Microsoft.AzureDataStudio
 ``` 
+
+SQL logical server names is globally unique, so we all have different name. Let's get your sql server name:
+
+```powershell
+az sql server list -g iac-ws5-rg --query [0].name -o tsv
+```
+
+!!! info "SQL Server name"
+    Further down in all labs, you should replace `YOUR-SQL-SERVER-NAME` with value you received from the command above. It will looks something like `iac-ws5-...-sql`
+
 
 Create a new connection to Azure SQL Server and use the following parameters:
 
@@ -150,15 +159,13 @@ Create a new connection to Azure SQL Server and use the following parameters:
 | --- | --- |
 | Connection type | Microsoft SQL Server |
 | Input type | Parameters |
-| Server | iac-ws5-sql.database.windows.net,1433 |
+| Server | YOUR-SQL-SERVER-NAME.database.windows.net,1433 |
 | Authentication type | Azure Active Directory - Universal with MFA support  |
 | Account | Click `Add an account`, authenticate with your Azure AD account, and then select your account from the list  |
 | Authentication type | Azure Active Directory - Universal with MFA support  |
-| Database | Default or select iac-ws5-db  |
+| Database | Default or select `iac-ws5-sqldb`  |
 
-Keep all other parameters as default and click `Connect`.
-
-You should now be connected to Azure SQL Server.
+Keep remaining parameters as default and click `Connect`. You should now be connected to Azure SQL Server.
 
 ![test-sql-2](../../assets/images/lab-01/test-sql-2.png)
 
@@ -179,4 +186,7 @@ az keyvault secret set --vault-name $keyVaultName --name "foo" --value "bar"
 
 # Get foo secret from keyvault
 az keyvault secret show --vault-name $keyVaultName --name "foo" --query value -otsv
+
+# Get all secrets
+az keyvault secret list --vault-name $keyVaultName
 ```

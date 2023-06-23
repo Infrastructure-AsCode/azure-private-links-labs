@@ -88,7 +88,8 @@ $keyvaultName = (az keyvault list -g iac-ws5-rg --query '[].name' -o tsv)
 Resolve-DnsName "$keyvaultName.vault.azure.net"
 
 # SQL Server
-Resolve-DnsName iac-ws5-sql.database.windows.net
+$sqlServerName = (az sql server list -g iac-ws5-rg --query [0].name -o tsv)
+Resolve-DnsName "$sqlServerName.database.windows.net"
 ```
 
 Now, open Azure VPN CLient, disconnect your active connection and then remove it.
@@ -129,7 +130,8 @@ $keyvaultName = (az keyvault list -g iac-ws5-rg --query '[].name' -o tsv)
 Resolve-DnsName "$keyvaultName.vault.azure.net"
 
 # SQL Server
-Resolve-DnsName iac-ws5-sql.database.windows.net
+$sqlServerName = (az sql server list -g iac-ws5-rg --query [0].name -o tsv)
+Resolve-DnsName "$sqlServerName.database.windows.net"
 ```
 
 Both should be resolved to their private IP addresses.
@@ -140,11 +142,10 @@ Try to get secrets from the Azure KeyVault:
 
 ```powershell
 $keyvaultName = (az keyvault list -g iac-ws5-rg --query '[].name' -o tsv)
-
 az keyvault secret list --vault-name $keyvaultName
 ```
 
-From the Azure Data Studio, try to connect to `iac-ws5-sql.database.windows.net` SQL Server.
+From the Azure Data Studio, try to connect to your SQL Server.
 
 ## Links
 
