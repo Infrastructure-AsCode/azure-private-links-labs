@@ -61,7 +61,6 @@ This template contains two resources:
 Save the file and deploy it using the following command:
 
 ```powershell
-# Deploy the Bicep template
 az deployment group create -g iac-ws5-rg --template-file .\dnsPrivateResolver.bicep -n 'Deploy-PrivateDNSResolver'
 ```
 
