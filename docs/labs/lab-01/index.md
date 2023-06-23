@@ -4,6 +4,7 @@ As always, we need to provision lab environment before we can start working on t
 
 Infrastructure for Lab environment is implemented using `Bicep` and code is located under [iac](https://github.com/Infrastructure-AsCode/azure-private-links-labs/tree/main/iac) folder. Most of the resources are implemented as Bicep [modules](https://github.com/Infrastructure-AsCode/azure-private-links-labs/tree/main/iac/modules). The master orchestration Bicep file is [infra.bicep](https://github.com/Infrastructure-AsCode/azure-private-links-labs/blob/main/iac/infra.bicep). It orchestrates deployment of the following resources:
 
+- Azure Resource Group `iac-ws5-rg` in `westeurope` region
 - Azure Private Virtual Network `iac-ws5-vnet` with the following subnets:
     - `GatewaySubnet` - for Azure Virtual Network Gateway
     - `dnsresolver-inbound-snet` - for Azure DNS Private Resolver inbound endpoint 
