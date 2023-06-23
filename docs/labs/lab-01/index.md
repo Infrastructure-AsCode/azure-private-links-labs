@@ -4,15 +4,19 @@ As always, we need to provision lab environment before we can start working on t
 
 Infrastructure for Lab environment is implemented using `Bicep` and code is located under [iac](https://github.com/Infrastructure-AsCode/azure-private-links-labs/tree/main/iac) folder. Most of the resources are implemented as Bicep [modules](https://github.com/Infrastructure-AsCode/azure-private-links-labs/tree/main/iac/modules). The master orchestration Bicep file is [infra.bicep](https://github.com/Infrastructure-AsCode/azure-private-links-labs/blob/main/iac/infra.bicep). It orchestrates deployment of the following resources:
 
-- Azure Private Virtual Network
-- Azure Virtual Network Gateway
-- Azure SQL Server with SQL Database
+- Azure Private Virtual Network `iac-ws5-vnet` with the following subnets:
+    - `GatewaySubnet` - for Azure Virtual Network Gateway
+    - `dnsresolver-inbound-snet` - for Azure DNS Private Resolver inbound endpoint 
+    - `testvm-snet` - for test VM 
+    - `plinks-snet` - for Azure Private Endpoints
+- Azure Virtual Network Gateway with Point-To-Site VPN configuration
+- Azure SQL Server with `AdventureWorksLT` sample database
 - Azure Key Vault
-- Azure Virtual Machine for testing
+- Azure Virtual Machine `testVM` (with nic and disk) for testing
 
 ## Task #1 - Register required resource providers
 
-Before we deploy lab resources, we need to register required resource providers. This is a one time operation per subscription.
+Before we deploy lab resources, we need to register required resource providers. This is a one time operation (per subscription).
 
 ```powershell
 az provider register -n Microsoft.Network
@@ -42,28 +46,42 @@ https://login.microsoftonline.com/common/oauth2/authorize?client_id=41b23e61-6c1
 Now, let's deploy lab resources.
 
 ```powershell
+# clone workload repo
+git clone git@github.com:Infrastructure-AsCode/azure-private-links-labs.git
+
 # change directory to iac folder
-cd iac
+cd .\azure-private-links-labs\iac\
 
 # Deploy Bicep master template
- ./deploy.ps1
+.\deploy.ps1
 ```
 
 Note! You will need to provide admin password for test VM. Note that supplied password must be between 8-123 characters long and must satisfy `at least 3` of password complexity requirements from the following:
+
 - Contains an uppercase character
 - Contains a lowercase character
 - Contains a numeric digit
 - Contains a special character
 - Control characters are not allowed
 
+For example, `FooBar123!` is valid password :)
+
 ![deploy](../../assets/images/lab-01/deploy.png)
 
+The `deploy.ps1` script does the following things:
+
+- it creates new Azure AD Group called `iac-ws5-sql-administrators`
+- it gets your signed in user object id and adds it to `iac-ws5-sql-administrators` group (you will be SQL Server admin)
+- it gets your egress public IP address (by calling `https://ifconfig.me/ip`)
+- it asks you for test VM admin password
+- it deploys `iac/infra.bicep` Bicep template at the current subscription scope
+
 !!! info "Estimated deployment time"
-    Because of Azure Virtual Network Gateway, deployment takes 35-40 minutes.
+    Because of Azure Virtual Network Gateway, deployment takes approx. 35-40 minutes.
 
 ## Task #4 - configure Azure VPN client
 
-First, check that Azure VPN client is installed on your machine. If not, download and install it from [here](https://www.microsoft.com/en-us/p/azure-vpn-client/9np355qt2sqb?activetab=pivot:overviewtab), or use `winget` (only for Windows users):
+Check that Azure VPN client is installed on your machine. If not, download and install it from [here](https://www.microsoft.com/en-us/p/azure-vpn-client/9np355qt2sqb?activetab=pivot:overviewtab), or use `winget` (only for Windows users):
 
 ```powershell
 winget install "azure vpn client"
@@ -85,7 +103,7 @@ When `azurevpnconfig.xml` file is loaded, click `Save`.
 
 ![import-vpn-config](../../assets/images/lab-01/import-vpn-config-1.png)
 
-You will now see new VPN connection profile in Azure VPN client and you can now connect to it.
+You will now see new VPN connection profile in Azure VPN client and you can connect to it.
 
 ![connect](../../assets/images/lab-01/vpn-connect.png)
 
@@ -93,7 +111,7 @@ You will be asked to enter your Azure AD credentials and if everything is config
 
 ![connected](../../assets/images/lab-01/vpn-connected.png)
 
-Under the `Connected properties` you can find what is your VPN IP Address and what VPN routes are available for you now. As you can see, our `iac-ws5-vnet` address range (`10.10.0.0/22`) is available for us now. You can find the same VPN IP Address if you run `ipconfig` command in your terminal.
+Under the `Connected properties` you can find what is your VPN IP Address and what VPN routes are available. As you can see, our `iac-ws5-vnet` address range (`10.10.0.0/22`) is accessible. You can find the same VPN IP Address if you run `ipconfig` command in your terminal.
 
 ```powershell
 ipconfig
@@ -103,7 +121,7 @@ ipconfig
 
 ## Task #5 - test connectivity to testVM
 
-Get testVM private IP address 
+Get your testVM private IP address 
 
 ```powershell
 az vm list-ip-addresses -g iac-ws5-rg -n testVM --query [0].virtualMachine.network.privateIpAddresses[0] -o tsv
@@ -115,7 +133,6 @@ Make sure that Azure VPN is connected, use this IP and connect to testVM using R
 
 You should now be able to remote into testVM.
 
-
 ## Task #6 - configure testVM
 
 While you are at testVM, download and install latest version of `az cli` from [this link](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest&WT.mc_id=AZ-MVP-5003837)
@@ -126,7 +143,7 @@ When installed, open PowerShell and login to your azure account by running:
 az login
 ```
 
-Check that you logged in and that you use correct subscription (if you have more than one subscription):
+Check that you logged in and that your active subscription is the correct one (if you have more than one subscription):
 
 ```powershell
 az account show
@@ -140,7 +157,7 @@ Start `Azure Data Studio`. If you haven't install it yet, download and install [
 winget install -e --id Microsoft.AzureDataStudio
 ``` 
 
-SQL logical server names is globally unique, so we all have different name. Let's get your sql server name:
+SQL logical server names are globally unique, so we all have different SQL server names. Let's get your SQL server name:
 
 ```powershell
 az sql server list -g iac-ws5-rg --query [0].name -o tsv
@@ -161,7 +178,6 @@ Create a new connection to Azure SQL Server and use the following parameters:
 | Server | YOUR-SQL-SERVER-NAME.database.windows.net,1433 |
 | Authentication type | Azure Active Directory - Universal with MFA support  |
 | Account | Click `Add an account`, authenticate with your Azure AD account, and then select your account from the list  |
-| Authentication type | Azure Active Directory - Universal with MFA support  |
 | Database | Default or select `iac-ws5-sqldb`  |
 
 Keep remaining parameters as default and click `Connect`. You should now be connected to Azure SQL Server.
