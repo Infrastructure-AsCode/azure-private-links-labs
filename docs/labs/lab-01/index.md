@@ -192,6 +192,12 @@ Create a new connection to Azure SQL Server and use the following parameters:
 | Account | Click `Add an account`, authenticate with your Azure AD account, and then select your account from the list  |
 | Database | Default or select `iac-ws5-sqldb`  |
 
+!!! info "Important"
+    Server connection string should be in form of YOUR-SQL-SERVER-NAME.database.windows.net,1433.
+    
+    Both database.windows.net suffix and port 1433 are required. 
+
+
 Keep remaining parameters as default and click `Connect`. You should now be connected to Azure SQL Server.
 
 ![test-sql-2](../../assets/images/lab-01/test-sql-2.png)
