@@ -46,10 +46,19 @@ https://login.microsoftonline.com/common/oauth2/authorize?client_id=41b23e61-6c1
 
 Now, let's deploy lab resources.
 
-```powershell
-# clone workload repo
-git clone git@github.com:Infrastructure-AsCode/azure-private-links-labs.git
+First, clone the repo. If you use SSH, use the following command:
 
+```powershell
+git clone git@github.com:Infrastructure-AsCode/azure-private-links-labs.git
+```
+
+If you use HTTPS, use the following command:
+
+```powershell
+git clone https://github.com/Infrastructure-AsCode/azure-private-links-labs.git
+```
+
+```powershell
 # change directory to iac folder
 cd .\azure-private-links-labs\iac\
 
@@ -79,6 +88,8 @@ The `deploy.ps1` script does the following things:
 
 !!! info "Estimated deployment time"
     Because of Azure Virtual Network Gateway, deployment takes approx. 35-40 minutes.
+
+If deployment of Virtual Machine failed, most likely it's because of the password complexity requirements. Check the error message, use different password and rerun deployment script again. It will only deploy resources that failed to deploy.
 
 ## Task #4 - configure Azure VPN client
 
