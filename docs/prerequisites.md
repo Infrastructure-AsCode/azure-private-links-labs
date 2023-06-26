@@ -94,3 +94,7 @@ Download and install [Azure Data Studio](https://docs.microsoft.com/en-us/sql/az
 # Install SQL Management Studio with winget
 winget install -e --id Microsoft.AzureDataStudio
 ```
+
+## Install Azure PowerShell module
+
+Make sure that the latest version of Azure PowerShell is installed. See [Install Azure PowerShell module](https://learn.microsoft.com/en-us/powershell/azure/install-azure-powershell) for detailed information.
