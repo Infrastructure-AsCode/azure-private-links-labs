@@ -16,7 +16,7 @@ and many more.
 
 Workshop is organized as a combination of theoretical blocks with slides and hand-on labs. Estimated time for workshop completion is between 3 and 4 hours.
 
-## Agenda (WIP)
+## Agenda
 
 - Welcome + practical information
 - Azure Azure Private Link overview (Slides)
