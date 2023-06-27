@@ -9,3 +9,15 @@ Remove all resources that were created during the workshop by running the follow
 ```powershell
 az group delete --name iac-ws5-rg --yes
 ```
+
+## Task #2 - delete Policy definition
+
+```powershell	
+Remove-AzPolicyDefinition -Name 'deploy-sa-blob-ple-dns-records'
+```
+
+## Task #3 - delete Azure AD group for SQL Admins
+
+```powershell
+az ad group delete -g iac-ws5-sql-administrators
+```
