@@ -173,5 +173,11 @@ If you check the Private DNS Zone `privatelink.blob.core.windows.net`, you will 
 
 ## Links
 
+- [Using Azure Policy to Create DNS Records for Private Endpoints](https://blog.tyang.org/2023/01/26/using-azure-policy-to-create-dns-records-for-private-endpoints)
+- [What is Azure Policy?](https://learn.microsoft.com/en-us/azure/governance/policy/overview)
+- [Azure Policy definition structure](https://learn.microsoft.com/en-us/azure/governance/policy/concepts/definition-structure)
+- [Azure Policy assignment structure](https://learn.microsoft.com/en-us/azure/governance/policy/concepts/assignment-structure)
 - [Azure services DNS zone configuration](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-dns#azure-services-dns-zone-configuration)
+- [Azure PowerShell Documentation](https://learn.microsoft.com/en-us/powershell/azure/?view=azps-10.0.0)
+- [New-AzPolicyDefinition](https://learn.microsoft.com/en-us/powershell/module/az.resources/new-azpolicydefinition?view=azps-10.0.0)
 - [List of all available Private Endpoints](https://learn.microsoft.com/en-us/azure/private-link/private-endpoint-overview#private-link-resource)
