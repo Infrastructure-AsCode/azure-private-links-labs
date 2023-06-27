@@ -20,7 +20,12 @@ Workshop is organized as a combination of theoretical blocks with slides and han
 
 - Welcome + practical information
 - Azure Azure Private Link overview (Slides)
-- [Lab-01](labs/lab-01/index.md) - provisioning of lab resources
+- [Lab-01](labs/lab-01/index.md) - Provision lab resources
+- [Lab-02](labs/lab-02/index.md) - Create a private endpoint for Azure SQL using Azure Portal
+- [Lab-03](labs/lab-03/index.md) - Create a private endpoint for Azure KeyVault using Bicep
+- [Lab-04](labs/lab-04/index.md) - Deploy Private DNS Resolver using Bicep
+- [Lab-05](labs/lab-05/index.md) - Use Azure Policy to Create DNS Records for Private Endpoints
+- [Lab-06](labs/lab-06/index.md) - Network Security Groups support for Private Endpoints
 - [Lab-07](labs/lab-07/index.md) - cleaning up resources
 
 ## Prerequisites
