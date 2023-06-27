@@ -42,6 +42,18 @@ https://login.microsoftonline.com/common/oauth2/authorize?client_id=41b23e61-6c1
 3. Select the account that has the `Global administrator` role if prompted.
 4. On the `Permissions requested` page, select `Accept`.
 
+!!! info "Note"
+    Some participants reported that they got the following error message:
+
+    `AADSTS500200: User account ... is a personal Microsoft account. Personal Microsoft accounts are not supported for this application unless explicitly invited to an organization. Try signing out and signing back in with an organizational account."`    
+
+In that case try following:
+
+- create new Azure AD user
+- assign it with `Global Administrator` role
+- sign in with this new user into Azure portal (that will require to change the password)
+- use this user to Authorize the Azure VPN application
+
 ## Task #3 - deploy lab resources
 
 Now, let's deploy lab resources.
