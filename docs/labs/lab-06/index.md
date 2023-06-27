@@ -5,7 +5,7 @@ For each rule, you can specify source and destination, port, and protocol. Secur
 
 In this lab we will implement the following requirements:
 
-- allow access to SQL server and Azure KeyVault from IP range configured for Point-To-Site VPN ()
+- allow access to SQL server and Azure KeyVault from IP range configured for Point-To-Site VPN
 - deny access to SQL server and Azure KeyVault from testVM
 
 ## Task #1 - test connectivity to SQL server and Azure KeyVault
