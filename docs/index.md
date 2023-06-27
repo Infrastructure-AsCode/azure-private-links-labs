@@ -19,7 +19,7 @@ Workshop is organized as a combination of theoretical blocks with slides and han
 ## Agenda
 
 - Welcome + practical information
-- Azure Azure Private Link overview - slides can be found [here](../slides/private-links.pptx)
+- Azure Azure Private Link overview - slides can be found [here](https://github.com/Infrastructure-AsCode/azure-private-links-labs/blob/main/slides/private-links.pptx)
 - [Lab-01](labs/lab-01/index.md) - Provision lab resources
 - [Lab-02](labs/lab-02/index.md) - Create a private endpoint for Azure SQL using Azure Portal
 - [Lab-03](labs/lab-03/index.md) - Create a private endpoint for Azure KeyVault using Bicep

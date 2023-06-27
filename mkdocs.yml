@@ -12,6 +12,7 @@ nav:
   - Lab 05 - Use Azure Policy to Create DNS Records for Private Endpoints: labs/lab-05/index.md
   - Lab 06 - Network Security Groups support for Private Endpoints: labs/lab-06/index.md
   - Lab 07 - Cleaning up resources: labs/lab-07/index.md
+  - Slides: https://github.com/Infrastructure-AsCode/azure-private-links-labs/blob/main/slides/private-links.pptx
 theme:
   name: material
   font:
