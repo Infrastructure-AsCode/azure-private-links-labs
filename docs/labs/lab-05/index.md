@@ -63,7 +63,7 @@ Next, deploy Azure Policy Definition for policy that will automatically create t
 The policy definition is stored in `deploy-sa-blob-ple-dns-records.json` file.
 
 ```powershell	
-New-AzPolicyDefinition -Name 'deploy-sa-blob-ple-dns-records' -DisplayName 'Deploy Storage Account Blob Private Endpoint DNS Record' -Policy 'deploy-sa-blob-ple-dns-records.json'
+New-AzPolicyDefinition -Name 'deploy-sa-blob-ple-dns-records' -DisplayName 'Deploy Storage Account Blob Private Endpoint DNS Record' -Policy 'https://raw.githubusercontent.com/Infrastructure-AsCode/azure-private-links-labs/main/docs/labs/lab-05/deploy-sa-blob-ple-dns-records.json'
 ```
 
 ## Task #3 - assign Azure Policy Definition
