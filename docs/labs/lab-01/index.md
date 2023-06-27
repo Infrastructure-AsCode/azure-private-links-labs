@@ -215,6 +215,12 @@ Keep remaining parameters as default and click `Connect`. You should now be conn
 ![test-sql-2](../../assets/images/lab-01/test-sql-2.png)
 
 
+!!! info "Important"
+    Some users (myself included) reported that they had the following error message `User account 'foo@bar.com' not found in MSAL cache, please add linked account or refresh account credentials.`
+    
+    In that case, restart Azure Data Studio and try again. I needed to restart it 2-3 times :(
+
+
 ## Task #8 - test connectivity to Azure KeyVault
 
 Test that you have access to Azure KeyVault. 
