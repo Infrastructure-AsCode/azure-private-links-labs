@@ -1,4 +1,4 @@
-# lab-05 - Using Azure Policy to Create DNS Records for Private Endpoints (storage account)
+# lab-05 - Use Azure Policy to Create DNS Records for Private Endpoints (storage account)
 
 As we already learned, Azure Private Link allows us to access Azure PaaS services over a private endpoint in virtual network. To make Azure PaaS resources accessible via Private link, we will need to:
 
@@ -70,6 +70,37 @@ New-AzPolicyDefinition -Name 'deploy-sa-blob-ple-dns-records' -DisplayName 'Depl
 
 To get a better understanding of how Azure Policy assignment works, we will manually assign the policy definition from the portal. In the real world scenario, you will typically assign the policy definition with IaC.
 
+Start by navigating to the Azure Policy blade in the Azure portal.
+
+![image](../../assets/images/lab-05/assign1.png)
+
+ Goto `Definitions` and search for `Deploy Storage Account Blob`
+
+![image](../../assets/images/lab-05/assign2.png)
+
+Open this policy definition and click `Assign` 
+
+![image](../../assets/images/lab-05/assign3.png)
+
+Select `iac-ws5-rg` Resource Group as a scope and click `Next`
+
+![image](../../assets/images/lab-05/assign4.png)
+
+At the `Advanced` tab keep everything as default and click `Next`
+
+![image](../../assets/images/lab-05/assign5.png)
+
+At the `Parameters` tab select `privatelink.blob.core.windows.net` as `Private DNS Zone for Storage Blob` parameter and click `Next`
+
+![image](../../assets/images/lab-05/assign6.png)
+
+At the `Remediation` tab make sure that `Create a Managed Identity` is selected, choose Region for managed identity (`West Europe` if you follow the workshop convention) and click `Next`
+
+![image](../../assets/images/lab-05/assign7.png)
+
+Click `Review + create` and then `Create` to assign the policy definition.
+
+With policy assigned to our resource group, let's create new Storage Account with Private Endpoint for Blob storage.
 
 ## Task #4 - implement and deploy Storage Account with Private Endpoint for Blob storage
 
