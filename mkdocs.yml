@@ -79,6 +79,9 @@ plugins:
   - tags
   
 extra:
+  analytics:
+    provider: google
+    property: GTM-W7736SZ
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/Infrastructure-AsCode/azure-private-links-labs
